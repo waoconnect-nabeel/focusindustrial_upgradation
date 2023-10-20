@@ -1,0 +1,121 @@
+<odoo>
+    <record id="dashboard_template_category" model="is.dashboard.template.category">
+        <field name="sequence" eval="10"/>
+        <field name="name">Accounting</field>
+    </record>
+
+    <record id="dashboard_balance_sheet_overview" model="is.dashboard.widget">
+        <field name="name">Balance Sheet (This year)</field>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">pie</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_date_range_type">this_year</field>
+        <field name="query_1_config_date_range_field_id" ref="account.field_account_move_line__date"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move_line"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_move_line__balance"/>
+        <field name="chart_1_config_aggregate_field_id" ref="field_account_move_line__user_type_id"/>
+        <field name="query_1_config_domain_widget">["&amp;",["account_id.user_type_id.include_initial_balance","=",True],["parent_state","=","posted"]]</field>
+    </record>
+
+    <record id="dashboard_ar" model="is.dashboard.widget">
+        <field name="name">Aged Receivable</field>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">bar</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move_line"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_move_line__amount_residual"/>
+        <field name="chart_1_config_aggregate_field_id" ref="account.field_account_move_line__date_maturity"/>
+        <field name="chart_1_config_sort_field_id" ref="account.field_account_move_line__date_maturity"/>
+        <field name="chart_1_config_sort_descending" eval="False"/>
+        <field name="query_1_config_domain_widget">["&amp;","&amp;","&amp;","&amp;",["amount_residual","!=",0],["reconciled","=",False],["account_id.reconcile","=",True],["account_id.internal_type","=","receivable"],["parent_state","=","posted"]]</field>
+    </record>
+
+    <record id="dashboard_ap" model="is.dashboard.widget">
+        <field name="name">Aged Payable</field>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">bar</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move_line"/>
+        <field name="query_1_config_measure_field_id" ref="field_account_move_line__amount_residual_negative"/>
+        <field name="chart_1_config_aggregate_field_id" ref="account.field_account_move_line__date_maturity"/>
+        <field name="chart_1_config_sort_field_id" ref="account.field_account_move_line__date_maturity"/>
+        <field name="chart_1_config_sort_descending" eval="False"/>
+        <field name="query_1_config_domain_widget">["&amp;","&amp;","&amp;","&amp;",["amount_residual","!=",0],["reconciled","=",False],["account_id.reconcile","=",True],["account_id.internal_type","=","payable"],["parent_state","=","posted"]]</field>
+    </record>
+
+    <record id="dashboard_opex" model="is.dashboard.widget">
+        <field name="name">Opex (Trailing 12 months)</field>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">pie</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move_line"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_move_line__balance"/>
+        <field name="chart_1_config_aggregate_field_id" ref="account.field_account_move_line__account_id"/>
+        <field name="query_1_config_date_range_type">last_x_months</field>
+        <field name="query_1_config_date_range_x" eval="12"/>
+        <field name="query_1_config_date_range_field_id" ref="account.field_account_move_line__date"/>
+        <field name="query_1_config_domain_widget" eval="[
+            '&amp;',
+                ['parent_state','=','posted'],
+                '|',
+                    ('account_id.user_type_id', '=', ref('account.data_account_type_expenses')),
+                    ('account_id.user_type_id', '=', ref('account.data_account_type_direct_costs')),
+
+        ]"/>
+    </record>
+
+<!--    <record id="dashboard_direct_costs" model="is.dashboard.widget">-->
+<!--        <field name="name">Cost of Sales vs. income</field>-->
+<!--        <field name="display_mode">graph</field>-->
+<!--        <field name="graph_type">bar</field>-->
+<!--        <field name="template_category_id" ref="dashboard_template_category"/>-->
+<!--        <field name="query_1_config_model_id" ref="account.model_account_move_line"/>-->
+<!--        <field name="chart_1_config_aggregate_field_id" ref="account.field_account_move_line__date_maturity"/>-->
+<!--        <field name="query_1_config_domain_widget">["&amp;","&amp;","&amp;",["amount_residual",">",0],["reconciled","=",False],["account_id.reconcile","=",True],["account_id.internal_type","=","payable"]]</field>-->
+<!--    </record>-->
+
+    <record id="dashboard_untaxed_amount_draft_out_refund_out_invoice" model="is.dashboard.widget">
+        <field name="name">Draft Customer Invoices/Credits</field>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_invoice_report"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_invoice_report__price_subtotal"/>
+        <field name="query_1_config_domain_widget">[("state","=","draft"),"|",("move_type","=","out_invoice"),("move_type","=","out_refund")]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_residual_out_refund_out_invoice" model="is.dashboard.widget">
+        <field name="name">Customer Invoices/Credits Unpaid Amount</field>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_move__amount_residual_signed"/>
+        <field name="query_1_config_domain_widget">[("state","=","posted"),"|",("move_type","=","out_invoice"),("move_type","=","out_refund")]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_untaxed_amount_draft_in_refund_in_invoice" model="is.dashboard.widget">
+        <field name="name">Draft Vendor Bills/Refunds</field>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_invoice_report"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_invoice_report__price_subtotal"/>
+        <field name="query_1_config_domain_widget">[("state","=","draft"),"|",("move_type","=","in_invoice"),("move_type","=","in_refund")]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_residual_in_refund_in_invoice" model="is.dashboard.widget">
+        <field name="name">Vendor Bills/Refunds Unpaid Amount</field>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="account.model_account_move"/>
+        <field name="query_1_config_measure_field_id" ref="account.field_account_move__amount_residual_signed"/>
+        <field name="query_1_config_domain_widget">[("state","=","posted"),"|",("move_type","=","in_invoice"),("move_type","=","in_refund")]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+</odoo>

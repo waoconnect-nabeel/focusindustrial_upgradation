@@ -1,0 +1,11 @@
+<odoo>
+      <template id="purchase_foc___purchaseorder_document_inherit" inherit_id="purchase.report_purchaseorder_document">
+         <!-- Date Req. -->
+          <xpath expr="//th[@name='th_date_req']" position="replace" />
+          <xpath expr="//span[@t-field='line.date_planned']/.." position="replace" />
+
+        <!--  Taxes -->
+          <xpath expr="//th[@name='th_taxes']" position="replace" />
+          <xpath expr="//td[@name='td_taxes']" position="replace" />
+    </template>
+</odoo>

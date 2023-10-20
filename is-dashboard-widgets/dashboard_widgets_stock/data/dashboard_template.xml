@@ -1,0 +1,23 @@
+<odoo>
+    <record id="dashboard_template_category" model="is.dashboard.template.category">
+        <field name="sequence" eval="40"/>
+        <field name="name">Inventory</field>
+    </record>
+
+    <record id="dashboard_late_delivery_orders" model="is.dashboard.widget">
+        <field name="name">Late Delivery Orders</field>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="stock.model_stock_picking"/>
+        <field name="query_1_config_domain_use_widget" eval="False"/>
+        <field name="query_1_config_domain">[("scheduled_date","&lt;",datetime.now()),("state","not in",["done","cancel"])]</field>
+        <field name="widget_type">count</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+<!--    <record id="dashboard_stock_on_hand" model="is.dashboard.widget">-->
+<!--        <field name="name">Stock on hand</field>-->
+<!--        <field name="template_category_id" ref="dashboard_template_category"/>-->
+<!--    </record>-->
+</odoo>

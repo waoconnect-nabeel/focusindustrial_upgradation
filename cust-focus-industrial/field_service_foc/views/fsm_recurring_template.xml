@@ -1,0 +1,17 @@
+<odoo>
+    <record id="fsm_recurring_template_form_view" model="ir.ui.view">
+        <field name="name">fsm.recurring.template.form.inherit.focus</field>
+        <field name="model">fsm.recurring.template</field>
+        <field name="inherit_id" ref="fieldservice_recurring.fsm_recurring_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="max_orders" position="after">
+                <field name="start_offset_months"/>
+                <field name="auto_confirm_orders"/>
+            </field>
+            <field name="fsm_order_template_id" position="after">
+                <field name="fsm_order_template_even_position_id" groups="fieldservice.group_fsm_template"/>
+                <field name="fsm_order_template_odd_position_id" groups="fieldservice.group_fsm_template"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<odoo>
+    <record id="fsm_order_search_view_inherit_filter" model="ir.ui.view">
+        <field name="name">fsm_order_search_view_inherit_filter</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='order_upcoming_month']" position="after">
+                 <filter
+                    string="Due This Month"
+                    domain="[('scheduled_date_start','&lt;',(context_today()+relativedelta(months=1)).strftime('%%Y-%%m-01')),
+                            ('scheduled_date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                    name="this_month_only"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

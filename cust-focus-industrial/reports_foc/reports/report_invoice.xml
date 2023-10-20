@@ -1,0 +1,34 @@
+<odoo>
+    <template id="report_invoice_document_inherit_reports_foc" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="sale_id" t-value="o.sudo().invoice_line_ids.sale_line_ids.order_id if len(o.invoice_line_ids.sale_line_ids.order_id) == 1 else False"/>
+            <t t-if="sale_id">
+                <t t-if="sale_id.partner_shipping_id == sale_id.partner_invoice_id
+                             and sale_id.partner_invoice_id != sale_id.partner_id
+                             or sale_id.partner_shipping_id != sale_id.partner_invoice_id">
+                    <t t-set="information_block">
+                        <strong t-if="sale_id.partner_shipping_id == sale_id.partner_invoice_id">Invoicing and Shipping Address:</strong>
+                        <strong t-if="sale_id.partner_shipping_id != sale_id.partner_invoice_id">Invoicing Address:</strong>
+                        <div t-field="sale_id.partner_invoice_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <t t-if="sale_id.partner_shipping_id != sale_id.partner_invoice_id">
+                            <strong>Shipping Address:</strong>
+                            <div t-field="sale_id.partner_shipping_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//p[@name='payment_term']" position="replace">
+            <p t-if="o.invoice_payment_term_id" name="payment_term">
+                <b>Payment Terms:</b> <span t-field="o.invoice_payment_term_id.name"/>
+            </p>
+        </xpath>
+
+        <!-- Change "Invoice" to "Tax Invoice" for compliance reasons -->
+        <xpath expr="//div[hasclass('page')]/h2/span[1]" position="replace">
+            <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Tax Invoice</span>
+        </xpath>
+    </template>
+</odoo>

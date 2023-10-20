@@ -1,0 +1,7 @@
+<odoo>
+    <template id="assets_backend" name="mail assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/mail_foc/static/src/js/thread_cache.js"/>
+        </xpath>
+    </template>
+</odoo>

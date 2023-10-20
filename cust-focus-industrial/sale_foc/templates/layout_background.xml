@@ -1,0 +1,43 @@
+<odoo>
+    <template id="external_layout_background_inherit_foc" inherit_id="web.external_layout_background">
+        <xpath expr="//span[@t-field='company.partner_id']/.." position="replace" >
+            <div class="float-right company_address">
+                <div>
+                    <strong t-field="company.partner_id.name"/>
+                </div>
+                <span t-field="company.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+            </div>
+        </xpath>
+
+        <xpath expr="//li[@t-if='company.phone']/.." position="replace">
+            <ul class="list-inline">
+                <li style="font-size: 0.8em" t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" t-field="company.phone"/></li>
+                <li style="font-size: 0.8em" t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
+                <li style="font-size: 0.8em" t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
+                <li style="font-size: 0.8em" t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/> <t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+            </ul>
+        </xpath>
+    </template>
+
+    <template id="web.address_layout">
+        <xpath expr="//t[@t-if='address']" position="replace">
+            <t t-if="address">
+
+                <div class="address row" style="margin-bottom:20px;">
+                    <div style="width:20px"/>
+                    <div name="address" t-att-class="'colclass col-5'">
+                        <strong>Invoiced To:</strong>
+                        <t t-raw="address"/>
+                    </div>
+                    <t t-if="information_block">
+                        <div name="information_block" class="col-6">
+                        <t t-raw="information_block"/>
+                        </div>
+                    </t>
+
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

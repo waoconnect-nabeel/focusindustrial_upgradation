@@ -1,0 +1,52 @@
+<odoo>
+    <record id="res_partner_view_form_inherit_partner_foc" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.partner.foc</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="fieldservice.fsm_partner_fields"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='service_location_id']/../.." position="after">
+                <seperator/>
+                <label for="fsm_equipment_ids" string="Equipment"/>
+                <field name="fsm_equipment_ids" nolabel="1">
+                    <tree>
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="lot_id"/>
+                        <field name="location_id"/>
+                        <field name="current_location_id"/>
+                    </tree>
+                </field>
+                <seperator/>
+                <label for="fsm_order_ids" string="Services"/>
+                <field name="fsm_order_ids" nolabel="1">
+                    <tree>
+                        <field name="name"/>
+                        <field name="scheduled_date_start"/>
+                        <field name="scheduled_date_end"/>
+                        <field name="person_id"/>
+                        <field name="notes"/>
+                        <field name="stage_id"/>
+                    </tree>
+                </field>
+                <seperator/>
+                <label for="note_ids" string="Notes"/>
+                <field name="note_ids" nolabel="1">
+                    <tree>
+                        <field name="note"/>
+                    </tree>
+                </field>
+                <seperator/>
+                <label for="invoice_line_ids" string="Invoice Lines"/>
+                <field name="invoice_line_ids" nolabel="1" >
+                    <tree>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="product_id"/>
+                        <field name="quantity"/>
+                        <field name="amount_currency"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>

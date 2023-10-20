@@ -1,0 +1,7 @@
+<odoo>
+    <template id="render_dashboard_widget_chart_text">
+        <t t-if="data['display_mode'] in ['graph'] and 'chart_text_table' in data">
+            <t t-raw="data['chart_text_table']"/>
+        </t>
+    </template>
+</odoo>

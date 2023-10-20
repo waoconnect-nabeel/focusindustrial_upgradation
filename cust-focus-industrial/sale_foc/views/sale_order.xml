@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_order_form_inherit_sale_mon" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale.mon</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='show_update_pricelist']" position="before">
+                <field name="install_date"/>
+                <field name="delivery_lead_time"/>
+            </xpath>
+            <xpath expr="//field[@name='validity_date']" position="before">
+                <field name="primary_sales_order"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,63 @@
+<odoo>
+    <record id="dashboard_template_category" model="is.dashboard.template.category">
+        <field name="sequence" eval="30"/>
+        <field name="name">Purchase</field>
+    </record>
+
+    <record id="dashboard_top_10_products_purchase_cost" model="is.dashboard.widget">
+        <field name="name">Top 10 Products Purchased (Cost)</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">bar</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="purchase.model_purchase_report"/>
+        <field name="query_1_config_measure_field_id" ref="purchase.field_purchase_report__untaxed_total"/>
+        <field name="chart_1_config_aggregate_field_id" ref="purchase.field_purchase_report__product_id"/>
+        <field name="chart_1_config_sort_field_id" ref="purchase.field_purchase_report__untaxed_total"/>
+        <field name="chart_1_config_sort_descending" eval="True"/>
+        <field name="query_1_config_result_limit" eval="10"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','purchase'),('state', '=','done')]</field>
+    </record>
+
+    <record id="dashboard_untaxed_total_purchase_confirmed_this_month" model="is.dashboard.widget">
+        <field name="name">Purchases This Month</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="purchase.model_purchase_report"/>
+        <field name="query_1_config_measure_field_id" ref="purchase.field_purchase_report__untaxed_total"/>
+        <field name="query_1_config_date_range_type">this_month</field>
+        <field name="query_1_config_date_range_field_id" ref="purchase.field_purchase_report__date_approve"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','purchase'),('state', '=','done')]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_untaxed_total_draft_purchase_this_month" model="is.dashboard.widget">
+        <field name="name">Draft Purchases This Month</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="purchase.model_purchase_report"/>
+        <field name="query_1_config_measure_field_id" ref="purchase.field_purchase_report__untaxed_total"/>
+        <field name="query_1_config_date_range_type">this_month</field>
+        <field name="query_1_config_date_range_field_id" ref="purchase.field_purchase_report__date_order"/>
+        <field name="query_1_config_domain_widget">[('state', '!=','purchase'),('state', '!=','done'),('state', '!=','cancel')]</field>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_untaxed_total_purchase_by_product_category_this_month" model="is.dashboard.widget">
+        <field name="name">Purchases by Product Category This Month</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">pie</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="purchase.model_purchase_report"/>
+        <field name="query_1_config_measure_field_id" ref="purchase.field_purchase_report__untaxed_total"/>
+        <field name="chart_1_config_aggregate_field_id" ref="purchase.field_purchase_report__category_id"/>
+        <field name="query_1_config_date_range_type">this_month</field>
+        <field name="query_1_config_date_range_field_id" ref="purchase.field_purchase_report__date_approve"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','purchase'),('state', '=','done')]</field>
+    </record>
+</odoo>

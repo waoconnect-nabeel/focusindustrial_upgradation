@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.fsm</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="create_fsm_location"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="fsm_partner_fields" model="ir.ui.view">
+        <field name="name">res.partner.fsm.form.inherit.focus</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="fieldservice.fsm_partner_fields" />
+        <field name="arch" type="xml">
+            <data/>
+            <xpath expr="//div[@name='button_box']/button/field[@name='owned_location_count']/.." position="before">
+                <button
+                        class="oe_stat_button"
+                        type="object"
+                        attrs="{'invisible': [('fsm_report_count', '=', 0)]}"
+                        name="action_open_fsm_reports"
+                        icon="fa-map-marker"
+                        context="{'default_owner_id': active_id}"
+                        groups="fieldservice.group_fsm_user"
+                >
+                    <field
+                            string="FSM Reports"
+                            name="fsm_report_count"
+                            widget="statinfo"
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

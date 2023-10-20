@@ -1,0 +1,89 @@
+<odoo>
+    <record id="dashboard_template_category" model="is.dashboard.template.category">
+        <field name="sequence" eval="20"/>
+        <field name="name">Sales</field>
+    </record>
+
+    <record id="dashboard_sale_orders_this_month" model="is.dashboard.widget">
+        <field name="name">Sales</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">card</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="sale.model_sale_order"/>
+        <field name="query_1_config_measure_field_id" ref="sale.field_sale_order__amount_untaxed"/>
+        <field name="query_1_config_date_range_type">dashboard</field>
+        <field name="query_1_config_date_range_field_id" ref="sale.field_sale_order__date_order"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','sale'),('state', '=','done')]</field>
+        <field name="query_1_config_enable_goal" eval="True"/>
+        <field name="goal_count" eval="800000"/>
+        <field name="show_variation_1" eval="False"/>
+        <field name="show_forecasted_variation_1" eval="False"/>
+    </record>
+
+    <record id="dashboard_top_10_products_sold" model="is.dashboard.widget">
+        <field name="name">Top 10 products sold</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">bar</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="sale.model_sale_report"/>
+        <field name="query_1_config_measure_field_id" ref="sale.field_sale_report__price_subtotal"/>
+        <field name="chart_1_config_aggregate_field_id" ref="sale.field_sale_report__categ_id"/>
+        <field name="query_1_config_date_range_type">dashboard</field>
+        <field name="query_1_config_date_range_x" eval="30"/>
+        <field name="query_1_config_date_range_field_id" ref="sale.field_sale_report__date"/>
+        <field name="chart_1_config_sort_field_id" ref="sale.field_sale_report__price_subtotal"/>
+        <field name="chart_1_config_sort_descending" eval="True"/>
+        <field name="query_1_config_result_limit" eval="10"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','sale'),('state', '=','done')]</field>
+    </record>
+
+    <record id="dashboard_sales_by_sales_team_this_month" model="is.dashboard.widget">
+        <field name="name">Sales by Sales Team</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">graph</field>
+        <field name="graph_type">pie</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="sale.model_sale_report"/>
+        <field name="query_1_config_measure_field_id" ref="sale.field_sale_report__price_subtotal"/>
+        <field name="chart_1_config_aggregate_field_id" ref="sale.field_sale_report__team_id"/>
+        <field name="query_1_config_date_range_type">dashboard</field>
+        <field name="query_1_config_date_range_field_id" ref="sale.field_sale_report__date"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','sale'),('state', '=','done')]</field>
+    </record>
+
+    <record id="dashboard_top_5_sale_orders" model="is.dashboard.widget">
+        <field name="name">Top 5 sales</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="display_mode">record_list</field>
+        <field name="template_category_id" ref="dashboard_template_category"/>
+        <field name="query_1_config_model_id" ref="sale.model_sale_order"/>
+        <field name="query_1_config_measure_field_id" ref="sale.field_sale_order__amount_untaxed"/>
+        <field name="query_1_config_date_range_type">dashboard</field>
+        <field name="query_1_config_date_range_field_id" ref="sale.field_sale_order__date_order"/>
+        <field name="chart_1_config_sort_field_id" ref="sale.field_sale_order__amount_untaxed"/>
+        <field name="chart_1_config_sort_descending" eval="True"/>
+        <field name="query_1_config_result_limit" eval="5"/>
+        <field name="query_1_config_domain_widget">['|', ('state', '=','sale'),('state', '=','done')]</field>
+    </record>
+    <record id="dashboard_top_5_sale_orders_record_list_line_1" model="is.dashboard.widget.record_list.column">
+        <field name="dashboard_id" ref="dashboard_top_5_sale_orders"/>
+        <field name="sequence" eval="1"/>
+        <field name="name">Customer</field>
+        <field name="field_id" ref="sale.field_sale_order__partner_id"/>
+    </record>
+    <record id="dashboard_top_5_sale_orders_record_list_line_2" model="is.dashboard.widget.record_list.column">
+        <field name="dashboard_id" ref="dashboard_top_5_sale_orders"/>
+        <field name="sequence" eval="2"/>
+        <field name="name">Salesperson</field>
+        <field name="field_id" ref="sale.field_sale_order__user_id"/>
+    </record>
+    <record id="dashboard_top_5_sale_orders_record_list_line_3" model="is.dashboard.widget.record_list.column">
+        <field name="dashboard_id" ref="dashboard_top_5_sale_orders"/>
+        <field name="sequence" eval="1"/>
+        <field name="name">Amount</field>
+        <field name="field_id" ref="sale.field_sale_order__amount_untaxed"/>
+        <field name="format_string">${:.2f}</field>
+    </record>
+
+</odoo>

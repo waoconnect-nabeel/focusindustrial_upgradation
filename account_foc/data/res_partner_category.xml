@@ -1,0 +1,5 @@
+<odoo noupdate="1">
+    <record id="reseller_tag" model="res.partner.category">
+        <field name="name">Reseller</field>
+    </record>
+</odoo>

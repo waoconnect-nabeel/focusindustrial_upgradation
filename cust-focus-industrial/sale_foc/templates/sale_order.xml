@@ -1,0 +1,77 @@
+<odoo>
+    <template id="sale_foc_report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
+        <!-- Change quote heading -->
+        <xpath expr="//span[contains(text(), 'Quotation #')]" position="replace">
+            <span t-if="doc.state in ['draft','sent']">Proposal # </span>
+        </xpath>
+
+<!--        Remove Tax column-->
+        <xpath expr="//th[@name='th_taxes']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_taxes']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+<!--        Remove Unit from quantity-->
+        <xpath expr="//span[@t-field='line.product_uom']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='information_block']/.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+
+        <!-- Show Payment terms -->
+        <xpath expr="//div[@t-if='doc.user_id.name']" position="after">
+            <div t-if="doc.payment_term_id" class="col-auto col-3 mw-100 mb-2">
+                <strong>Payment Terms:</strong>
+                <p class="m-0" t-field="doc.payment_term_id"/>
+            </div>
+        </xpath>
+
+<!--        Add Shipping address and rename invoice address-->
+        <xpath expr="//t[@t-set='address']" position="replace">
+            <div class="row">
+                    <div class="col-6">
+                        <strong>Quote For:</strong>
+                        <div t-field="doc.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                        <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+                    </div>
+                <div class="col-6">
+                    <t t-if="doc.partner_shipping_id">
+                        <strong>Shipping Address:</strong>
+                        <div t-field="doc.partner_shipping_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+<!--        Add Valid for column-->
+        <xpath expr="//div[@name='expiration_date']" position="replace">
+            <div t-if="doc.validity_date and doc.state in ['draft', 'sent'] and doc.date_order" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Valid For:</strong>
+                    <p class="m-0" t-esc="'0 Days' if ':00:' in doc.valid_for_days else doc.valid_for_days"/>
+                </div>
+        </xpath>
+<!--        Add part Number column-->
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th style="width:130px;!important" name="th_default_code">Part Number</th>
+        </xpath>
+        <xpath expr="//td[@name='td_name']" position="before">
+            <td>
+                <span t-field="line.product_id.default_code"/>
+            </td>
+        </xpath>
+<!--        Remove product code from name-->
+        <xpath expr="//td[@name='td_name']" position="replace">
+            <td name="td_name"><span t-field="line.name_clean"/></td>
+        </xpath>
+<!--        Add Lead Time-->
+        <xpath expr="//div[@id='informations']" position="inside">
+            <div t-if="doc.delivery_lead_time" class="col-auto col-3 mw-100 mb-2">
+                <strong>Delivery Lead Time:</strong>
+                <p class="m-0" t-field="doc.delivery_lead_time"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

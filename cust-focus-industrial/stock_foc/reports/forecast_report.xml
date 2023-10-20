@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_forecast_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <h2 class="mt16">
+                    <span>Forecast Report</span>
+                </h2>
+
+                <table class="table table-sm o_main_table">
+                    <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                    <thead style="display: table-row-group">
+                        <tr>
+                            <th name="th_sku" class="text-left">SKU</th>
+                            <th name="th_product" class="text-left">Product Name</th>
+                            <th name="th_quantity" class="text-center">Current Qty On Hand</th>
+                            <t t-foreach="docs.get_next_6_months()" t-as="month">
+                                <th class="text-right" t-esc="month"/>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+                        <t t-foreach="docs" t-as="product">
+                            <tr>
+                                <td name="td_sku"><span t-field="product.default_code"/></td>
+                                <td name="td_product"><span t-field="product.name"/></td>
+                                <td name="td_quantity" class="text-center" style="width: 10%;">
+                                    <span t-field="product.qty_available"/>
+                                    <span t-field="product.uom_id"/>
+                                </td>
+                                <t t-foreach="product.next_6_months_forecast()" t-as="month_data">
+                                    <td class="text-right">
+                                        <span t-esc="month_data.get('qty')"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="report_forecast">
+        <t t-call="web.html_container">
+                <t t-call="stock_foc.report_forecast_document"/>
+        </t>
+    </template>
+
+    <record id="action_report_forecast" model="ir.actions.report">
+        <field name="name">Forecast Report</field>
+        <field name="model">product.template</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_foc.report_forecast</field>
+        <field name="report_file">stock_foc.report_forecast</field>
+        <field name="print_report_name">"Forecast Test"</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

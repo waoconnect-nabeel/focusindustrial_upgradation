@@ -1,0 +1,231 @@
+<odoo>
+    <data>
+        <template id="report_maintenance_report_document" name="My Example Report">
+            <style>
+                .fieldservice-maintenance-report h1 {
+                font-size: 1.5em;
+                font-weight: 900;
+                }
+                .fieldservice-maintenance-report h2 {
+                font-size: 1.1em;
+                text-align:center;
+                }
+                .fieldservice-maintenance-report .table td, .fieldservice-maintenance-report .table th {
+                font-size: 0.9em;
+                padding: 2px;
+                padding-left: 15px;
+                border: 1px solid black;
+                }
+                .fieldservice-maintenance-report .table tr {
+                border-top: 1px solid black;
+                }
+                .fieldservice-maintenance-report .table.extra-padding td {
+                    padding: 10px;
+                }
+                .fieldservice-maintenance-report .dark-background {
+                background-color: #ccc;
+                font-weight: 900;
+                }
+            </style>
+            <div class="fieldservice-maintenance-report">
+                <h1 class="text-center">MAINTENANCE REPORT</h1>
+                <table class="table table-bordered mb32">
+                    <tr>
+                        <td style="width:50%">
+                            <strong>DATE &amp; TIME:</strong>
+                            <span t-if="doc.date_start" t-field="doc.date_start" />
+                            <span t-else="" t-field="doc.scheduled_date_start" />
+                        </td>
+                        <td>
+                            <strong>ORDER NUMBER:</strong>
+                            <span t-esc="doc.name" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%">
+                            <strong>CUSTOMER:</strong>
+                            <span t-esc="doc.location_id.owner_id.display_name" />
+                        </td>
+                        <td>
+                            <strong>CONTACT:</strong>
+                            <span t-field="doc.location_id.contact_id.name" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%">
+                            <strong>ADDRESS:</strong>
+                            <span t-esc="doc.get_address()" />
+                        </td>
+                        <td>
+                            <strong>PHONE:</strong>
+                            <span t-field="doc.location_id.phone" />
+                        </td>
+                    </tr>
+                </table>
+
+                <h2>EQUIPMENT SPECIFICATIONS</h2>
+                <table class="table table-bordered mb32 extra-padding">
+                    <tr>
+                        <td style="width:50%">
+                            <strong>MAKE</strong>
+                            <span t-if="doc.equipment_ids" t-esc="doc.equipment_ids[0].equipment_make" />
+
+                        </td>
+                        <td>
+                            <strong>COMPRESSOR TYPE:</strong>
+                            <span t-if="doc.equipment_ids" t-esc="doc.equipment_ids[0].equipment_type" />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width:50%">
+                            <strong>MODEL:</strong>
+
+                            <span t-if="doc.equipment_ids" t-esc="doc.equipment_ids[0].equipment_model" />
+                        </td>
+                        <td>
+                            <strong>SERIAL NUMBER:</strong>
+                            <span t-if="doc.equipment_ids" t-esc="doc.equipment_ids[0].lot_id.display_name" />
+
+                        </td>
+                    </tr>
+                </table>
+
+
+                <h2>PARTS REQUIRED</h2>
+                <table class="table table-bordered mb32">
+                    <tr>
+                       <th width="20%">PART NUMBER</th>
+                       <th width="50%">DESCRIPTION</th>
+                       <th width="15%">QUANTITY</th>
+                       <th></th>
+                    </tr>
+                    <t t-foreach="doc.stock_request_ids" t-as="stock">
+                        <tr>
+                            <td><span t-field="stock.product_id.default_code" /></td>
+                            <td><span t-field="stock.product_id.name" /></td>
+                            <td><span t-esc="'-' if stock.direction == 'outbound' else '' "/><span t-field="stock.product_uom_qty" /></td>
+                            <td></td>
+                        </tr>
+                    </t>
+                    <tr>
+                        <td>&amp;nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>&amp;nbsp;</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <div style="page-break-inside: avoid">
+                    <h2>MAINTENANCE CHECKLIST</h2>
+                    <table class="table table-bordered mb32">
+                        <tr>
+                            <td colspan="4" class="dark-background text-center">
+                                TAKE 5 MINUTES TO ASSESS AREA FOR HAZARDS PRIOR TO COMMENCING SERVICE<br />
+                                Always wear appropriate PPE to counter any hazards
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="padding: 15px;">Pre Service Notes: </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>START TIME:</strong>
+                            <span t-if="doc.date_start" t-field="doc.date_start" />
+                            <span t-else="" t-field="doc.scheduled_date_start" /></td>
+                            <td colspan="2"><strong>FINISH TIME:</strong>
+                            <span t-if="doc.date_end" t-field="doc.date_end" />
+                            <span t-else="" t-field="doc.scheduled_date_end" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong style="margin-right:10px;">CURRENT HOURS:</strong><span t-esc="doc.current_hours if doc.current_hours else 'N/A'" /></td>
+                            <td colspan="2"><strong style="margin-right:10px;">LOAD HOURS:</strong> <span t-esc="doc.load_hours if doc.load_hours else 'N/A'" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong style="margin-right:10px;">LOAD PRESSURE:</strong><t t-if="doc.load_pressure"><span t-field="doc.load_pressure"/> Bar</t><t t-else=""><span> N/A</span></t></td>
+                            <td colspan="2"><strong style="margin-right:10px;">OPERATING TEMPERATURE:</strong><t t-if="doc.operating_temperature"><span t-field="doc.operating_temperature"/> &#176;C</t><t t-else=""><span> N/A</span></t> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong style="margin-right:10px;">UNLOAD PRESSURE:</strong><t t-if="doc.unload_load_pressure"><span t-field="doc.unload_load_pressure" /> Bar</t><t t-else=""><span> N/A</span></t></td>
+                            <td colspan="2"><strong style="margin-right:10px;">AMBIENT TEMPERATURE AT COMPRESSION:</strong> <t t-if="doc.compression_temperature"><span t-field="doc.compression_temperature" /> &#176;C</t><t t-else=""><span> N/A</span></t></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="dark-background text-center">EXTRA TASKS</td>
+                        </tr>
+                        <t t-raw="doc.get_extra_task_table()" />
+
+                        <tr>
+                            <td colspan="4" style="padding: 15px;">Fault History: </td>
+                        </tr>
+                        <tr>
+                            <td>Needs Repair <i t-if="not doc.needs_repair" style="float:right;font-size:1.3em" class="text-right fa fa-square-o"/> <i t-if="doc.needs_repair"  style="float:right;font-size:1.3em" class="text-right fa fa-check-square-o"/></td>
+                            <td>System Leaks <i t-if="not doc.system_leaks" style="float:right;font-size:1.3em" class="text-right fa fa-square-o"/> <i t-if="doc.system_leaks" style="float:right;font-size:1.3em" class="text-right fa fa-check-square-o"/></td>
+                            <td>Service interval <span t-esc="doc.service_interval or '______'" /> months</td>
+                            <td>Other Compressors:</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="4" style="padding: 15px;"><strong>Other Compressors / Possible Services:</strong> <span t-field="doc.other_compressors"/></td>
+                        </tr>
+                        <t t-if="not disable_render_signature_section">
+                            <tr>
+                                <td colspan="2" style="padding: 15px;"><strong>SERVICE TECHNICIAN:</strong> <span t-field="doc.person_id"/></td>
+                                <td colspan="2" style="padding: 15px;"><strong>CUSTOMER:</strong> <span t-field="doc.location_id.owner_id.display_name"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding-left: 15px;"><strong>SIG:</strong><img height="50px" t-if="doc.technician_signature" t-att-src="'data:image/png;base64,%s' % to_text(doc.technician_signature)"/> </td>
+                                <td colspan="2" style="padding-left: 15px;"><strong>SIG:</strong><img height="50px" t-if="doc.customer_signature" t-att-src="'data:image/png;base64,%s' % to_text(doc.customer_signature)"/> </td>
+                            </tr>
+                        </t>
+
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <record id="paperformat_maintenance_report" model="report.paperformat">
+            <field name="name">A4</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">35</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">25</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+        <template id="report_maintenance_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout_background">
+                        <t t-set="company" t-value="doc.company_id.sudo()"/>
+                        <t t-call="field_service_foc.report_maintenance_report_document"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <report
+                id="maintenance_report"
+                model="fsm.order"
+                string="Maintenance Report"
+                report_type="qweb-pdf"
+                name="field_service_foc.report_maintenance_report"
+                file="field_service_foc.report_maintenance_report"
+                paperformat="field_service_foc.paperformat_maintenance_report"
+                menu="True"
+        />
+    </data>
+</odoo>

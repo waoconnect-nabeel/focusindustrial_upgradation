@@ -1,0 +1,241 @@
+<odoo>
+    <record id="fsm_order_form_inherit_field_service_foc" model="ir.ui.view">
+        <field name="name">fsm.order.form.inherit.field.service.foc</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_form" />
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="display_name"/>
+            </field>
+
+            <xpath expr="//page[@name='equipements_page']" position="after">
+                <page name="report_page" string="Report">
+                    <field name="report_render" />
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='execution_page']" position="inside">
+                <group colspan="4" >
+                    <group>
+                        <field name="needs_repair" />
+                        <field name="system_leaks" />
+                        <field name="service_interval" />
+                    </group>
+                    <group>
+                        <field name="current_hours_str" string="Current Hours" />
+                        <field name="load_hours_str" string="Load Hours"/>
+                    </group>
+                </group>
+                <group colspan="4" >
+                    <group>
+                        <field name="load_pressure_str" string="Load Pressure"/>
+                        <field name="unload_load_pressure_str"/>
+                    </group>
+                    <group >
+                        <field name="operating_temperature_str" string="Operating Temperature" />
+                        <field name="compression_temperature_str" string="Ambient Temperature at Compression" />
+                    </group>
+                </group>
+                <group colspan="4" >
+                    <field name="other_compressors" />
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='order_activity_ids']/.." position="replace"/>
+
+            <xpath expr="//page[@name='execution_page']//field[@name='other_compressors']/.." position="after">
+                <group>
+                    <field name="before_photos" widget="many2many_binary"/>
+                </group>
+                <group string="Activities" colspan="4" >
+                    <field name="order_activity_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="required" />
+                            <field name="ref" />
+                            <field name="completed" invisible="1" />
+                            <field name="completed_on" />
+                            <field name="completed_by" />
+                            <field name="action_bool_field_complete" widget="boolean_toggle" string="Done" attrs="{'invisible': ['|', ('state', 'not in', ['todo']),('action_bool_field_cancel', '=', True)]}" />
+                            <field name="action_bool_field_cancel" widget="boolean_toggle" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['todo']),('action_bool_field_complete', '=', True)]}" />
+<!--                            <button-->
+<!--                                name="action_done"-->
+<!--                                string="Complete"-->
+<!--                                type="object"-->
+<!--                                class="oe_highlight"-->
+<!--                                attrs="{'invisible': [('state', 'not in', ['todo'])]}"-->
+<!--                            />-->
+<!--                            <button-->
+<!--                                name="action_cancel"-->
+<!--                                string="Cancel"-->
+<!--                                type="object"-->
+<!--                                attrs="{'invisible': [('state', 'not in', ['todo'])]}"-->
+<!--                            />-->
+                            <field name="state" readonly="1" />
+                        </tree>
+                    </field>
+                </group>
+                <group>
+                    <field name="after_photos" widget="many2many_binary"/>
+                </group>
+                <group>
+                     <field name="technician_signature" widget="signature"/>
+                    <field name="customer_signature" widget="signature" />
+                </group>
+
+            </xpath>
+
+            <xpath expr="//field[@name='person_id']" position="after">
+                <field name="equipment_lot_id" invisible="1"/>
+                <field name="equipment_lot_name" attrs="{'invisible': [('equipment_lot_id', '=',  False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='branch_id']/.." position="after">
+                <group string="Important Notes" name="important_grp">
+                    <field name="notes" nolabel="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="before">
+                <field name="display_address" string="Address"/>
+                <field name="default_code" string="Internal Reference"/>
+            </xpath>
+            <xpath expr="//field[@name='notes']/.." position="after">
+                <field name="customer_note_ids" >
+                    <tree editable="bottom">
+                        <field name="note" />
+                        <field name="date" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fsm_order_tree_view_inherit_field_service_foc" model="ir.ui.view">
+        <field name="name">fsm.order.tree.inherit.field.service.foc</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='person_id']" position="before">
+                <field name="notes"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fsm_order_kanban_view_inherit_field_service_foc" model="ir.ui.view">
+        <field name="name">fsm.order.kanban.inherit.field.service.foc</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']/../.." position="before">
+                <div>
+                    <table>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Date</td>
+                            <td><field name="scheduled_date_start"/></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Customer</td>
+                            <td><field name="owner_id"/></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Contact</td>
+                            <td><field name="contact_id"/></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Phone/Mobile</td>
+                            <td><field name="phone"/></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Address</td>
+                            <td>
+                                <div class="o_address_format" name="div_address">
+                                    <field name="street" class="o_address_street"/>
+                                    <field name="street2" class="o_address_street"/>
+                                    <field name="city" class="o_address_city"/>
+                                    <field name="state_name" placeholder="State" />
+                                    <field name="zip" class="o_address_zip"/>
+                                    <field name="country_name" class="o_address_country"/>
+                                    <button name="open_map" type="object" string="Map" class="btn fa fa-map-marker"/>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Internal Reference</td>
+                            <td><field name="default_code"/></td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" style="vertical-align:top;">Important Notes</td>
+                            <td><field name="notes"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fsm_order_calendar_view_day" model="ir.ui.view">
+        <field name="name">Orders</field>
+        <field name="model">fsm.order</field>
+        <field name="type">calendar</field>
+        <field name="priority">100</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <calendar
+                    string="FSM Orders"
+                    date_start="scheduled_date_start"
+                    date_delay="scheduled_duration"
+                    color="stage_id"
+                    mode="day"
+            >
+                <field name="name" />
+                <field name="stage_id" />
+                <field name="location_id" />
+                <field name="phone" />
+                <field name="notes"/>
+                <field
+                        name="person_id"
+                        write_model="fsm.person.calendar.filter"
+                        write_field="fsm_person_id"
+                        avatar_field="image_small"
+                />
+                <field name="person_phone" />
+                <field name="city" />
+                <field name="state_name" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="fieldservice.action_fsm_report_order" model="ir.actions.act_window">
+        <field name="view_mode">pivot,graph</field>
+    </record>
+
+    <record id="action_fsm_dash_order_calendar_day" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">fsm.order</field>
+        <field name="view_mode">calendar,kanban,tree,form</field>
+        <field name="search_view_id" ref="fieldservice.fsm_order_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Order.
+            </p>
+        </field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'calendar', 'view_id': ref('fsm_order_calendar_view_day')}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'form'})]"/>
+    </record>
+    <menuitem
+            id="menu_fsm_dash_order"
+            name="Orders (Day View)"
+            action="action_fsm_dash_order_calendar_day"
+            parent="fieldservice.dashboard"
+            sequence="10"
+            groups="fsm_day_view"
+    />
+
+
+</odoo>

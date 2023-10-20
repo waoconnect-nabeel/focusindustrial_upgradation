@@ -1,0 +1,14 @@
+<odoo>
+    <template id="sale_foc_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//p[@t-if='o.narration']" position="replace" />
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div t-if="o.narration" style2="position:absolute; top:750px;">
+                <strong >Please Note:</strong><br />
+                <p  name="comment">
+                    <span t-field="o.narration"/>
+                </p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

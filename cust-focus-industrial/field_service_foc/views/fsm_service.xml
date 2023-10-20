@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_fsm_order_form_inherit_stock" model="ir.ui.view">
+        <field name="name">fsm.order.form.stock.inherit.focus</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice_stock.view_fsm_order_form_inherit_stock" />
+        <field name="arch" type="xml">
+            <field name="stock_request_ids" position="attributes">
+                <attribute name="context">{'default_direction': 'outbound'}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

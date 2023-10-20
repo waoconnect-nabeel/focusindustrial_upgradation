@@ -1,0 +1,14 @@
+<odoo>
+    <record id="fsm_calendar_popup_extend" model="ir.ui.view">
+        <field name="name">fsm_order_button</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice.fsm_order_calendar_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="display_address"/>
+                <field name="notes"/>
+                <field name="default_code" string="Internal Reference"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

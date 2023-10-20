@@ -1,0 +1,24 @@
+<odoo>
+    <template id="report_delivery_document_inherit_reports_foc" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@name='partner_header']" position="inside">
+            <t t-set="sale_id" t-value="o.sudo().sale_id"/>
+            <t t-if="sale_id">
+                <t t-if="sale_id.partner_shipping_id == sale_id.partner_invoice_id
+                             and sale_id.partner_invoice_id != sale_id.partner_id
+                             or sale_id.partner_shipping_id != sale_id.partner_invoice_id">
+                    <t t-set="information_block">
+                        <strong t-if="sale_id.partner_shipping_id == sale_id.partner_invoice_id">Invoicing and Shipping Address:</strong>
+                        <strong t-if="sale_id.partner_shipping_id != sale_id.partner_invoice_id">Invoicing Address:</strong>
+                        <div t-field="sale_id.partner_invoice_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <t t-if="sale_id.partner_shipping_id != sale_id.partner_invoice_id">
+                            <strong>Shipping Address:</strong>
+                            <div t-field="sale_id.partner_shipping_id"
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>
